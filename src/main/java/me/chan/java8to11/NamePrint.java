@@ -1,6 +1,6 @@
 package me.chan.java8to11;
 
-public interface FooInterface {
+public interface NamePrint {
     void printName();
 
     // default 키워드를 통해

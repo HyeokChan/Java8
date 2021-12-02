@@ -1,10 +1,10 @@
 package me.chan.java8to11;
 
-public class DefaultFoo implements FooInterface{
+public class NamePrintImpl implements NamePrint {
 
     String name;
 
-    public DefaultFoo(String name) {
+    public NamePrintImpl(String name) {
         this.name = name;
     }
 

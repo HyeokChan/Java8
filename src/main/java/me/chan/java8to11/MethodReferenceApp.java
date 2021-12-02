@@ -6,7 +6,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-public class App {
+public class MethodReferenceApp {
     public static void main(String[] args) {
         Greeting greeting = new Greeting();
         /**
@@ -32,21 +32,6 @@ public class App {
         String[] names = {"keesun", "toby", "chan"};
         Arrays.sort(names, String::compareToIgnoreCase);
         System.out.println(Arrays.toString(names));
-
-        /**
-         * 인터페이스 기본 메소드와 스태틱 메소드
-         */
-        FooInterface fooInterface = new DefaultFoo("chan");
-        fooInterface.printName();
-        fooInterface.printNameUpperCase();
-
-        /**
-         * static method
-         */
-        FooInterface.printAnything();
-
-
-
 
     }
 }

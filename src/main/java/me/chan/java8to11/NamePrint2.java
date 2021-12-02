@@ -1,6 +1,6 @@
 package me.chan.java8to11;
 
-public interface Bar {
+public interface NamePrint2 {
     /**
      * extends FooInterface 사용 시
      * Bar를 구현하는 구현체가 FooInterface의 default printNameUppercase 메소드를

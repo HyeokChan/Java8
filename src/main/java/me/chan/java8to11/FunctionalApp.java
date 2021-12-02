@@ -2,7 +2,7 @@ package me.chan.java8to11;
 
 import java.util.function.*;
 
-public class Foo {
+public class FunctionalApp {
     public static void main(String[] args) {
 
         RunSomething runSomething = (number) -> {
@@ -49,14 +49,15 @@ public class Foo {
         System.out.println("binaryOperator = " + binaryOperator.apply(1, 2));
 
         
-        Foo foo = new Foo();
-        foo.run();
+        FunctionalApp functionalApp = new FunctionalApp();
+        functionalApp.run();
 
 
     }
 
-    ///////////////////////////////////////////////////////////////
-    // 변수 캡처, 쉐도잉
+    /**
+     * 변수 캡처, 쉐도잉
+     */
     private void run() {
         // effective final
         int baseNumber = 10;
@@ -74,9 +75,11 @@ public class Foo {
                 System.out.println(baseNumber);
             }
         };
-        // 람다
-        // 쉐도잉(더 큰 스콥의 변수가 가려지는 것)이 안된다.
-        // run 메소드와 같은 스콥으로 취급된다.
+        /**
+         * 람다
+         * 쉐도잉(더 큰 스콥의 변수가 가려지는 것)이 안된다.
+         * run 메소드와 같은 스콥으로 취급된다.
+         */
         IntConsumer printInt = (number) -> {
             // 같은 이름의 변수를 사용할 수 없다.
             //int baseNumber = 11;
