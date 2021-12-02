@@ -56,7 +56,7 @@ public class Foo {
     }
 
     ///////////////////////////////////////////////////////////////
-    // 변수 캡처
+    // 변수 캡처, 쉐도잉
     private void run() {
         // effective final
         int baseNumber = 10;
