@@ -48,6 +48,42 @@ public class Foo {
         System.out.println("unaryOperator = " + unaryOperator.apply(1));
         System.out.println("binaryOperator = " + binaryOperator.apply(1, 2));
 
+        
+        Foo foo = new Foo();
+        foo.run();
+
+
+    }
+
+    ///////////////////////////////////////////////////////////////
+    // 변수 캡처
+    private void run() {
+        // effective final
+        int baseNumber = 10;
+        // 로컬 클래스
+        class LocalClass {
+            void printBaseNumber(){
+                int baseNumber = 11;
+                System.out.println(baseNumber); // 11 (쉐도잉)
+            }
+        }
+        // 익명 클래스
+        Consumer<Integer> integerConsumer = new Consumer<Integer>() {
+            @Override
+            public void accept(Integer baseNumber) { // 10 쉐도잉
+                System.out.println(baseNumber);
+            }
+        };
+        // 람다
+        // 쉐도잉(더 큰 스콥의 변수가 가려지는 것)이 안된다.
+        // run 메소드와 같은 스콥으로 취급된다.
+        IntConsumer printInt = (number) -> {
+            // 같은 이름의 변수를 사용할 수 없다.
+            //int baseNumber = 11;
+            System.out.println(number + baseNumber);
+        };
+        printInt.accept(10);
+
     }
 
 }
