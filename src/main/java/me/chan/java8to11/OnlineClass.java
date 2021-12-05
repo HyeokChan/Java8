@@ -1,9 +1,12 @@
 package me.chan.java8to11;
 
+import java.util.Optional;
+
 public class OnlineClass {
     private Integer id;
     private String title;
     private boolean closed;
+    public Progress progress;
 
     public OnlineClass(Integer id, String title, boolean closed) {
         this.id = id;
@@ -33,5 +36,13 @@ public class OnlineClass {
 
     public void setClosed(boolean closed) {
         this.closed = closed;
+    }
+
+    public Optional<Progress> getProgress() {
+        return Optional.ofNullable(progress);
+    }
+
+    public void setProgress(Progress progress) {
+        this.progress = progress;
     }
 }
