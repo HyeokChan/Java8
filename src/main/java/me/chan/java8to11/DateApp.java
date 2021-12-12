@@ -59,10 +59,8 @@ public class DateApp {
         GregorianCalendar gregorianCalendar = new GregorianCalendar();
         LocalDateTime localDateTime = gregorianCalendar.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 
-        
         ZoneId pst = TimeZone.getTimeZone("PST").toZoneId();
         TimeZone timeZone = TimeZone.getTimeZone(pst);
-
 
     }
 }
