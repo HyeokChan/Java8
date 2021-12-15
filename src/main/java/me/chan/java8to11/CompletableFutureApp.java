@@ -1,13 +1,12 @@
 package me.chan.java8to11;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.*;
 
 public class CompletableFutureApp {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
         Thread thread = new Thread(() -> {
             System.out.println("Thread: " + Thread.currentThread().getName());
             try {
@@ -47,6 +46,41 @@ public class CompletableFutureApp {
         scheduledExecutorService1.scheduleAtFixedRate(getRunnable("Period"), 3, 2, TimeUnit.SECONDS);
         scheduledExecutorService1.shutdown(); // Period 확인하려면 주석처리
 
+        Callable<String> hello = () -> {
+            Thread.sleep(2000L);
+            return "Hello";
+        };
+
+        Callable<String> java = () -> {
+            Thread.sleep(3000L);
+            return "JAVA";
+        };
+
+        Callable<String> chan = () -> {
+            Thread.sleep(1000L);
+            return "CHAN";
+        };
+
+        ExecutorService executorService2 = Executors.newSingleThreadExecutor();
+
+        Future<String> helloFuture = executorService2.submit(hello);
+        System.out.println("helloFuture.isDone() : " + helloFuture.isDone());
+        System.out.println("Started!");
+        helloFuture.get();
+        // 작업 취소
+        //helloFuture.cancel(true);
+        System.out.println("helloFuture.isDone() : " + helloFuture.isDone());
+        System.out.println("End!");
+        executorService2.shutdown();
+
+        ExecutorService executorService3 = Executors.newFixedThreadPool(4);
+        // invokeAll 모든 Callable이 끝날때 까지 기다린다.
+        List<Future<String>> futures = executorService3.invokeAll(Arrays.asList(hello, java, chan));
+        for (Future<String> future : futures) {
+            System.out.println("invokeAll" + future.get());
+        }
+        String s = executorService3.invokeAny(Arrays.asList(hello, java, chan));
+        System.out.println("invokeAny" + s);
 
     }
 
