@@ -77,10 +77,56 @@ public class CompletableFutureApp {
         // invokeAll 모든 Callable이 끝날때 까지 기다린다.
         List<Future<String>> futures = executorService3.invokeAll(Arrays.asList(hello, java, chan));
         for (Future<String> future : futures) {
-            System.out.println("invokeAll" + future.get());
+            System.out.println("invokeAll : " + future.get());
         }
         String s = executorService3.invokeAny(Arrays.asList(hello, java, chan));
-        System.out.println("invokeAny" + s);
+        System.out.println("invokeAny : " + s);
+        executorService3.shutdown();
+
+        // CompletableFuture
+        System.out.println("CompletableFuture >> ");
+        CompletableFuture<String> objectCompletableFuture = new CompletableFuture<>();
+        objectCompletableFuture.complete("chan");
+        System.out.println("objectCompletableFuture.get() : " + objectCompletableFuture.get());
+
+
+        CompletableFuture<Void> completableFuture = CompletableFuture.runAsync(() -> {
+            System.out.println("Hello " + Thread.currentThread().getName());
+        });
+        completableFuture.get();
+
+        CompletableFuture<String> stringCompletableFuture = CompletableFuture.supplyAsync(() -> {
+            System.out.println("Hello " + Thread.currentThread().getName());
+            return "Hello";
+        });
+        System.out.println("stringCompletableFuture.get() : " + stringCompletableFuture.get());
+
+        CompletableFuture<String> stringCompletableFuture1 = CompletableFuture.supplyAsync(() -> {
+            System.out.println("Hello " + Thread.currentThread().getName());
+            return "Hello";
+        }).thenApply((string) -> {
+            System.out.println("thenApply " + Thread.currentThread().getName());
+            return string.toUpperCase();
+        });
+        System.out.println("stringCompletableFuture1.get() : " + stringCompletableFuture1.get());
+
+        CompletableFuture<Void> voidCompletableFuture = CompletableFuture.supplyAsync(() -> {
+            System.out.println("Hello " + Thread.currentThread().getName());
+            return "Hello";
+        }).thenAccept((string1) -> {
+            System.out.println("thenAccept " + Thread.currentThread().getName());
+            System.out.println(string1.toUpperCase());
+        });
+        voidCompletableFuture.get();
+
+        CompletableFuture<Void> voidCompletableFuture1 = CompletableFuture.supplyAsync(() -> {
+            System.out.println("Hello " + Thread.currentThread().getName());
+            return "Hello";
+        }).thenRun(() -> {
+            System.out.println("thenRun " + Thread.currentThread().getName());
+        });
+        voidCompletableFuture1.get();
+
 
     }
 
