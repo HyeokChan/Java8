@@ -3,6 +3,7 @@ package me.chan.java8to11;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 public class CompletableFutureApp {
 
@@ -83,7 +84,7 @@ public class CompletableFutureApp {
         System.out.println("invokeAny : " + s);
         executorService3.shutdown();
 
-        // CompletableFuture
+        // CompletableFuture 1
         System.out.println("CompletableFuture >> ");
         CompletableFuture<String> objectCompletableFuture = new CompletableFuture<>();
         objectCompletableFuture.complete("chan");
@@ -127,7 +128,86 @@ public class CompletableFutureApp {
         });
         voidCompletableFuture1.get();
 
+        // CompletableFuture 2 (조합, 예외처리)
+        CompletableFuture<String> stringCompletableFuture2 = CompletableFuture.supplyAsync(() -> {
+            System.out.println("Hello " + Thread.currentThread().getName());
+            return "Hello";
+        });
 
+        CompletableFuture<String> objectCompletableFuture1 = stringCompletableFuture2.thenCompose((string3) -> {
+            return getStringCompletableFuture3(string3);
+        });
+        System.out.println("objectCompletableFuture1.get() : " + objectCompletableFuture1.get());
+
+        CompletableFuture<String> helloCf = CompletableFuture.supplyAsync(() -> {
+            System.out.println("Hello" + Thread.currentThread().getName());
+            return "Hello";
+        });
+
+        CompletableFuture<String> worldCf = CompletableFuture.supplyAsync(() -> {
+            System.out.println("World" + Thread.currentThread().getName());
+            return "World";
+        });
+
+        CompletableFuture<String> stringCompletableFuture3 = helloCf.thenCombine(worldCf, (h, w) -> {
+            return h + " " + w;
+        });
+        System.out.println("stringCompletableFuture3.get() : " + stringCompletableFuture3.get());
+
+        List<CompletableFuture> futures1 = Arrays.asList(helloCf, worldCf);
+        CompletableFuture[] completableFutures = futures1.toArray(new CompletableFuture[futures1.size()]);
+        CompletableFuture<List<Object>> listCompletableFuture = CompletableFuture.allOf(completableFutures)
+                .thenApply(v -> {
+                    return futures1.stream()
+                            .map(CompletableFuture::join)
+                            .collect(Collectors.toList());
+                });
+        listCompletableFuture.get().forEach(System.out::println);
+
+        CompletableFuture<Void> voidCompletableFuture2 = CompletableFuture.anyOf(helloCf, worldCf).thenAccept(System.out::println);
+        System.out.println("voidCompletableFuture2 = " + voidCompletableFuture2.get());
+
+        // 예외처리
+        boolean throwError = true;
+        CompletableFuture<String> hello2 = CompletableFuture.supplyAsync(() -> {
+            if (throwError) {
+                throw new IllegalArgumentException();
+            }
+            System.out.println("Hello2 = " + Thread.currentThread().getName());
+            return "Hello2";
+        }).exceptionally(ex -> {
+            System.out.println("ex = " + ex);
+            return "Error!";
+        });
+        System.out.println("hello2 = " + hello2.get());
+
+        // handle
+        CompletableFuture<String> hello3 = CompletableFuture.supplyAsync(() -> {
+            if (throwError) {
+                throw new IllegalArgumentException();
+            }
+            System.out.println("Hello3 = " + Thread.currentThread().getName());
+            return "Hello3";
+        }).handle((result, ex) -> {
+            if(ex != null){
+                System.out.println("ex = " + ex);
+                return "Error3!";
+            }
+            return result;
+        });
+        System.out.println("hello3 = " + hello3.get());
+
+
+
+
+
+
+    }
+    private static CompletableFuture<String> getStringCompletableFuture3(String message) {
+        return CompletableFuture.supplyAsync(() -> {
+            System.out.println(message + Thread.currentThread().getName());
+            return message + "World";
+        });
     }
 
     private static Runnable getRunnable(String message) {
