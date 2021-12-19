@@ -197,11 +197,6 @@ public class CompletableFutureApp {
         });
         System.out.println("hello3 = " + hello3.get());
 
-
-
-
-
-
     }
     private static CompletableFuture<String> getStringCompletableFuture3(String message) {
         return CompletableFuture.supplyAsync(() -> {
